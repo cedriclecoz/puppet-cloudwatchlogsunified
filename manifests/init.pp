@@ -39,8 +39,8 @@ class cloudwatchlogsunified (
     ensure  => 'file',
     path    => '/opt/aws/amazon-cloudwatch-agent/bin/config.json',
     mode    => '0600',
-    source  => 'cloudwatchlogsunified/config.json',
-    unless  => '[ -e /opt/aws/amazon-cloudwatch-agent/bin/config.json ]',
+    source  => 'puppet:///modules/cloudwatchlogsunified/config.json',
+    replace => 'no',
     require => [ Exec['wget-cloudwatchagent'] ]
   }
 }
