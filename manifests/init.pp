@@ -37,7 +37,7 @@ class cloudwatchlogsunified (
 
   file { 'base_config':
     ensure  => 'file',
-    path    => '/opt/aws/amazon-cloudwatch-agent/bin/config.json',
+    path    => $cloudwatchlogsunified::params::config,
     mode    => '0600',
     source  => 'puppet:///modules/cloudwatchlogsunified/config.json',
     replace => 'no',
