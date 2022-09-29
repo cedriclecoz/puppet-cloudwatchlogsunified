@@ -43,4 +43,14 @@ class cloudwatchlogsunified (
     replace => 'no',
     require => [ Exec['wget-cloudwatchagent'] ]
   }
+  ~> Exec['ReloadAwsLogsConfig']
+
+
+  exec { 'ReloadAwsLogsConfig':
+    path        => '/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin',
+    command     => "/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+                   -a fetch-config -m ec2 -s -c file:${cloudwatchlogsunified::params::config}",
+    subscribe   => File['base_config'],
+    refreshonly => true
+  }
 }
