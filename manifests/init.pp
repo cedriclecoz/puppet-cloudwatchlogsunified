@@ -38,7 +38,7 @@ class cloudwatchlogsunified (
   file { 'base_config':
     ensure  => 'file',
     path    => $cloudwatchlogsunified::params::config,
-    mode    => '0600',
+    mode    => '0640',
     source  => 'puppet:///modules/cloudwatchlogsunified/config.json',
     replace => 'no',
     require => [ Exec['wget-cloudwatchagent'] ]
