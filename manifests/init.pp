@@ -13,6 +13,7 @@ class cloudwatchlogsunified (
 ) inherits cloudwatchlogsunified::params {
 
   validate_hash($logs)
+  ensure_packages('wget')
 
   case $facts['os']['family'] {
     'Debian': {
