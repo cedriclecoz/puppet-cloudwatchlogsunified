@@ -9,11 +9,25 @@
 #
 class cloudwatchlogsunified (
   $region               = $cloudwatchlogsunified::params::region,
-  $logs                 = {}
+  $logs                 = {},
+  $cwagent_uid          = 2222,
+  $cwagent_gid          = 2222,
 ) inherits cloudwatchlogsunified::params {
 
   validate_hash($logs)
   ensure_packages('wget', {'ensure' => 'latest'})
+
+  group { 'cwagent':
+    ensure => 'present',
+    gid    => $cwagent_gid,
+  }
+  user { 'cwagent':
+    ensure  => 'present',
+    uid     => $cwagent_uid,
+    groups  => 'cwagent',
+    shell   => '/usr/sbin/nologin'
+    require => Group['cwagent'],
+  }
 
   case $facts['os']['family'] {
     'Debian': {
@@ -29,7 +43,8 @@ class cloudwatchlogsunified (
             onlyif  => '[ -e /tmp/amazon-cloudwatch-agent.deb ]',
             unless  => '[ -d /opt/aws/amazon-cloudwatch-agent/bin ]',
             require => [
-              Exec['wget-cloudwatchagent']
+              Exec['wget-cloudwatchagent'],
+              User['cwagent'],
             ]
           }
     }
