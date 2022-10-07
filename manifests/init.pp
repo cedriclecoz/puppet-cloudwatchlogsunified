@@ -25,8 +25,8 @@ class cloudwatchlogsunified (
     ensure  => 'present',
     uid     => $cwagent_uid,
     groups  => 'cwagent',
-    shell   => '/usr/sbin/nologin'
-    require => Group['cwagent'],
+    shell   => '/usr/sbin/nologin',
+    require => [ Group['cwagent'], ],
   }
 
   case $facts['os']['family'] {
