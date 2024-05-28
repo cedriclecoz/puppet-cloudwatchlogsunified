@@ -13,10 +13,10 @@
 # @example
 #   include cloudwatchlogsunified::logs
 define cloudwatchlogsunified::logs (
-  $path       = '',
-  $log_group  = '',
-  $log_stream = '',
-  $time_zone  = 'LOCAL'
+  String $path       = '',
+  String $log_group  = '',
+  String $log_stream = '',
+  String $time_zone  = 'LOCAL'
 ){
   validate_absolute_path($path)
   ensure_packages(['jq',], {'ensure' => 'latest'})

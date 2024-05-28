@@ -8,13 +8,12 @@
 # @maintainer cedric.le.coz@rdkcentral.com
 #
 class cloudwatchlogsunified (
-  $region               = $cloudwatchlogsunified::params::region,
-  $logs                 = {},
-  $cwagent_uid          = 2222,
-  $cwagent_gid          = 2222,
+  String $region        = $cloudwatchlogsunified::params::region,
+  Array[String] $logs   = [],
+  Integer $cwagent_uid  = 2222,
+  Integer $cwagent_gid  = 2222,
 ) inherits cloudwatchlogsunified::params {
 
-  validate_hash($logs)
   ensure_packages('wget', {'ensure' => 'latest'})
 
   group { 'cwagent':
@@ -68,5 +67,21 @@ class cloudwatchlogsunified (
                    -a fetch-config -m ec2 -s -c file:${cloudwatchlogsunified::params::config}",
     subscribe   => File['base_config'],
     refreshonly => true,
+  }
+
+  if $logs != [] {
+    $logs.each | $logfile | {
+      if '.' in $logfile {
+        $base = split($logfile, '[.]')[0]    # Split on . char
+      } else {
+        $base = $logfile
+      }
+      $logname = basename($base)
+      cloudwatchlogsunified::logs { "${trusted['hostname']}-${logname}":
+        path       => $logfile,
+        log_stream => $logname,
+        log_group  => $trusted['hostname'],
+      }
+    }
   }
 }
