@@ -45,7 +45,7 @@ class cloudwatchlogsunified (
             require => [
               Exec['wget-cloudwatchagent'],
               User['cwagent'],
-            ]
+            ],
           }
     }
     default: { fail("${module_name} not supported on ${facts['os']['family']}/${facts['os']['distro']}.") }
@@ -57,7 +57,7 @@ class cloudwatchlogsunified (
     mode    => '0640',
     source  => 'puppet:///modules/cloudwatchlogsunified/config.json',
     replace => 'no',
-    require => [ Exec['wget-cloudwatchagent'] ]
+    require => [ Exec['wget-cloudwatchagent'] ],
   }
   ~> Exec['ReloadAwsLogsConfig']
 
@@ -67,6 +67,6 @@ class cloudwatchlogsunified (
     command     => "/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
                    -a fetch-config -m ec2 -s -c file:${cloudwatchlogsunified::params::config}",
     subscribe   => File['base_config'],
-    refreshonly => true
+    refreshonly => true,
   }
 }
