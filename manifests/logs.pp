@@ -13,12 +13,11 @@
 # @example
 #   include cloudwatchlogsunified::logs
 define cloudwatchlogsunified::logs (
-  String $path       = '',
-  String $log_group  = '',
-  String $log_stream = '',
+  String $path,
+  String $log_group,
+  String $log_stream,
   String $time_zone  = 'LOCAL'
 ){
-  validate_absolute_path($path)
   ensure_packages(['jq',], {'ensure' => 'latest'})
 
   exec { "${log_group}_${log_stream}_cloudwatchagent":
