@@ -8,10 +8,11 @@
 # @maintainer cedric.le.coz@rdkcentral.com
 #
 class cloudwatchlogsunified (
-  String $region        = $cloudwatchlogsunified::params::region,
-  Array[String] $logs   = [],
-  Integer $cwagent_uid  = 2222,
-  Integer $cwagent_gid  = 2222,
+  String $region          = $cloudwatchlogsunified::params::region,
+  Array[String] $logs     = [],
+  Integer $cwagent_uid    = 2222,
+  Integer $cwagent_gid    = 2222,
+  String $template_config = $cloudwatchlogsunified::params::template_config,
 ) inherits cloudwatchlogsunified::params {
 
   ensure_packages('wget', {'ensure' => 'latest'})
@@ -54,7 +55,7 @@ class cloudwatchlogsunified (
     ensure  => 'file',
     path    => $cloudwatchlogsunified::params::config,
     mode    => '0640',
-    source  => 'puppet:///modules/cloudwatchlogsunified/config.json',
+    source  => "puppet:///modules/cloudwatchlogsunified/${template_config}",
     replace => 'no',
     require => [ Exec['wget-cloudwatchagent'] ],
   }
